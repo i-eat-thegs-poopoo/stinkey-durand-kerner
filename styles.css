@@ -1,0 +1,287 @@
+:root {
+    --textbox-bg-color: #ffffff;
+    --textbox-border-color: #cacdd1;
+    --button-color: #5080f0;
+    --button-text-color: #f0f0f0;
+    --main-bg-color: #f1f3f4;
+    --text-color: #303030;
+    --textbox-width: 70%;
+    --div-border-radius: 4px;
+}
+
+body {
+    background-color: var(--main-bg-color);
+}
+
+@keyframes loadMain {
+    0% { opacity: 0.7 }
+    100% { opacity: 1 }
+}
+
+#main {
+    position: fixed;
+
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+
+    display: flex;
+    flex-flow: column;
+    
+    background-color: var(--main-bg-color);
+
+    animation: loadMain ease-in 0.3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes loadIcon {
+    0% { opacity: 0 }
+    100% { opacity: 1 }
+}
+
+#icon-container {
+    width: 512;
+    max-width: 50%;
+    height: 64px;
+    min-height: 64px;
+    margin: 0 auto;
+    margin-top: 5%;
+}
+
+#icon {
+    font-family: "Roboto", sans-serif;
+
+    animation: loadIcon ease-in 0.3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+#icon-underline {
+    width: 384px;
+    max-width: 80%;
+    height: 2px;
+    margin: 0 auto;
+    margin-top: 16px;
+
+    background: #5080f0;
+}
+
+#input-button-container {
+    width: var(--textbox-width);
+    height: 64px;
+    min-height: 64px;
+
+    margin: 0px auto;
+    margin-top: 5%;
+
+    display: flex;
+    flex-flow: row;
+}
+
+#input-container {
+    max-width: max(calc(100% - 144px), calc(80% - 16px));
+
+    flex: 1 1 auto;
+
+    background-color: var(--textbox-bg-color);
+    border: 1px solid var(--textbox-border-color);
+    border-radius: var(--div-border-radius);
+}
+
+#input {
+    width: calc(100% - 8px);
+    height: 100%;
+
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+
+    overflow: scroll;
+    overflow: overlay;
+
+    caret-color: #303030;
+
+    z-index: 0;
+}
+
+#input::-webkit-scrollbar {
+    width: 0px;
+    height: 6px;
+}
+
+#input::-webkit-scrollbar-track {
+    margin: 2px;
+
+    background: none;
+}
+
+#input::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 3px;
+}
+
+#input::-webkit-scrollbar-thumb:hover {
+    background: #d0d0d0;
+}
+
+.monomial {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    font-family: "Times New Roman", Symbola, serif;
+    font-size: 32px;
+    color: var(--text-color);
+}
+
+.coefficient {
+    min-width: 16px;
+
+    color: var(--text-color);
+}
+
+.coefficient:focus {
+    outline: none;
+    border-radius: 6px;
+    border: 2px solid #e0e0e0 !important;
+}
+
+.variable {
+    margin-left: 2px;
+    margin-right: 2px;
+
+    font-style: italic;
+}
+
+.exponent {
+    margin-top: -16px;
+
+    font-size: 24px;
+}
+
+.sign {
+    margin-left: 8px;
+    margin-right: 8px;
+
+    font-weight: 500;
+}
+
+#input:first-child {
+    padding-left: 8px;
+}
+
+.last {
+    margin-right: 16px;
+
+    color: #c0c0c0;
+}
+
+.last .coefficient {
+    border-radius: 6px;
+    border: 2px solid #f0f0f0;
+}
+
+@keyframes loadButton {
+    0% { color: var(--button-color) }
+    100% { color: var(--button-text-color) }
+}
+
+#button {
+    width: 20%;
+    max-width: 128px;
+    margin-left: 16px;
+
+    background-color: var(--button-color);
+    border: none;
+    border-radius: var(--div-border-radius);
+
+    font-family: "Roboto", sans-serif;
+    font-size: min(32px, 5vw);
+    color: var(--button-text-color);
+
+    transition: 0.2s;
+
+    animation: loadButton ease-in 0.3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+#button:hover {
+    background-color: #80a0f0;
+}
+
+#output-container {
+    margin: 0px auto;
+    margin-top: 16px;
+    margin-bottom: 5%;
+    width: var(--textbox-width);
+
+    flex: 1 1 auto;
+
+    overflow: hidden;
+
+    background-color: var(--textbox-bg-color);
+    border: 1px solid var(--textbox-border-color);
+    border-radius: var(--div-border-radius);
+}
+
+@keyframes loadOutput {
+    0% { color: var(--textbox-bg-color) }
+    100% { color: var(--text-color) }
+}
+
+#output {
+    padding: 32px;
+    width: calc(100% - 64px);
+    height: calc(100% - 64px);
+
+    overflow: scroll;
+    overflow: overlay;
+
+    animation: loadOutput ease-in 0.3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+#output::-webkit-scrollbar {
+    width: 6px;
+    height: 0px;
+}
+
+#output::-webkit-scrollbar-track {
+    margin: 2px;
+
+    background: none;
+}
+
+#output::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 3px;
+}
+
+#output::-webkit-scrollbar-thumb:hover {
+    background: #d0d0d0;
+}
+
+.roots {
+    width: 100%;
+    margin: 32px;
+}
+
+.solutions {
+    margin-bottom: 32px;
+
+    font-family: "Roboto", sans-serif;
+    font-size: 32px;
+}
+
+.root-container {
+    margin-left: 16px;
+
+    font-family: "Times New Roman", Symbola, serif;
+    font-size: 32px;
+}

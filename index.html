@@ -1,0 +1,42 @@
+<meta charset="utf-8" />
+<title>Durand-Kerner Method</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+<link rel="stylesheet" href=".\styles.css">
+<div id="main">
+    <div id="icon-container">
+        <svg id="icon" viewBox="0 0 160 16"><text x="0" y="14">Durand-Kerner Method</text></svg>
+        <div id="icon-underline"></div>
+    </div>
+    <div id="input-button-container">
+        <div id="input-container">
+            <div id="input">
+                <div class="monomial last">
+                    <div class="sign"></div>
+                    <div class="coefficient" contenteditable="true"></div>
+                    <div class="variable"></div>
+                    <div class="exponent"></div>
+                </div>
+            </div>
+        </div>
+        <button id="button" onclick="parseFromInput()">Go!</button>
+    </div>
+    <div id="output-container">
+        <div id="output">
+            <div id="roots-real" class="roots">
+                <div class="solutions">0 real solutions</div>
+                <div class="root-container"></div>
+            </div>
+            <div id="roots-imaginary" class="roots">
+                <div class="solutions">0 pure-imaginary solutions</div>
+                <div class="root-container"></div>
+            </div>
+            <div id="roots-complex" class="roots">
+                <div class="solutions">0 complex solutions</div>
+                <div class="root-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src=".\main.js"></script>
