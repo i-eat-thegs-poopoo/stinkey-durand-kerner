@@ -210,7 +210,7 @@ document.addEventListener("keydown", event => {
 });
 
 document.addEventListener("copy", event => {
-    event.clipboardData.setData("text", (document.getSelection() + "").replace(" ", "").replace("−", "-"));
+    event.clipboardData.setData("text", (document.getSelection() + "").replaceAll(" ", "").replaceAll("−", "-"));
     event.preventDefault();
 });
 
