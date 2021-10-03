@@ -1,3 +1,10 @@
+const last = xs => xs[xs.length - 1];
+const indexOf = (xs, x) => {
+    let index = 0;
+    for (const y of xs) if (y == x) break; else index++;
+    return index;
+};
+
 // Complex arithmetic
 
 class C {
@@ -35,7 +42,7 @@ const pEval = (f, x) => {
 function roots(f) {
 
     // Fix the stupid thing i hate you this caused so many bugs because i didnt realize the
-    const first = f[f.length - 1];
+    const first = last(f);
     f = f.map(x => cDiv(x, first));
 
     // Initial approximations
@@ -84,99 +91,81 @@ const outputReal = document.getElementById("roots-real");
 const outputImaginary = document.getElementById("roots-imaginary");
 const outputComplex = document.getElementById("roots-complex");
 
-for (const x of [...input.childNodes]) if (x.nodeName == "#text") input.removeChild(x);
-
 // Input GUI
 
 document.addEventListener("focusout", event => {
-    if (event.target.className != "coefficient") return;
-    for (const x of [...event.path[1].childNodes]) if (x.nodeName == "#text") event.path[1].removeChild(x);
-    if (event.target.innerText[0] == "-") {
-        event.target.innerText = event.target.innerText.slice(1);
-        event.path[1].childNodes[0].innerHTML = "&#8722";
-    } else if (event.path[2].childNodes[0] == event.path[1]) {
-        event.path[1].childNodes[0].innerText = "";
+    const coefficient = event.target;
+    if (coefficient.className != "coefficient") return;
+
+    const monomial = coefficient.parentNode;
+    const sign = monomial.querySelector(".sign");
+
+    if (coefficient.innerText[0] == "-") {
+        coefficient.innerText = coefficient.innerText.slice(1);
+        sign.innerHTML = "&#8722";
     } else {
-        event.path[1].childNodes[0].innerText = "+";
+        sign.innerText = monomial == monomial.parentNode.querySelector(".monomial") ? "" : "+";
     };
-    let list = [];
-    for (const x of [...event.path[2].childNodes]) x.nodeName != "#text" ? list.push(x) : event.path[2].removeChild(x);
-    if (list[list.length - 1] == event.path[1] && event.target.innerText != "") {
-        event.path[1].className = "monomial";
+
+    const monomials = input.querySelectorAll(".monomial");
+
+    if (last(monomials) == monomial && coefficient.innerText != "") {
+        monomial.className = "monomial";
         let newMonomial = document.createElement("div");
         newMonomial.className = "monomial last";
-        newMonomial.appendChild(document.createElement("text"));
-        if (list.length == 0) {
-            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
-                <div class=\"variable\"></div> <div class=\"exponent\"></div>";
-        } else if (list.length == 1) {
-            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
-                <div class=\"variable\">x</div> <div class=\"exponent\"></div>";
-        } else {
-            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
-                <div class=\"variable\">x</div> <div class=\"exponent\">" + list.length + "</div>";
-        };
-        event.path[2].appendChild(newMonomial);
-    } else if (list[list.length - 2] == event.path[1] && event.target.innerText == "") {
-        event.path[2].removeChild(event.path[2].lastChild);
-        event.path[1].className = "monomial last";
-        if (event.path[2].childNodes[0] == event.path[1]) {
-            event.path[1].childNodes[0].innerText = "";
-        } else {
-            event.path[1].childNodes[0].innerText = "+";
-        };
-    } else if (event.target.innerText == "") {
-        event.target.innerText = "0";
+        newMonomial.innerHTML = `<div class="sign">+</div> <div class="coefficient" contenteditable="true"></div>`
+            + `<div class="variable"> ${monomials.length > 0 ? "x" : ""} </div> <div class="exponent"> ${monomials.length > 1 ? monomials.length : ""} </div>`;
+        input.appendChild(newMonomial);
+    } else if (monomials[monomials.length - 2] == monomial && coefficient.innerText == "") {
+        input.removeChild(last(input.querySelectorAll(".monomial")));
+        monomial.className = "monomial last";
+        sign.innerText = monomial == input.querySelector(".monomial") ? "" : "+";
+    } else if (coefficient.innerText == "") {
+        coefficient.innerText = "0";
     };
 });
 
 document.addEventListener("focusin", event => {
-    if (event.target.className != "coefficient") return;
-    for (const x of [...event.path[1].childNodes]) if (x.nodeName == "#text") event.path[1].removeChild(x);
-    let list = [];
-    for (const x of [...event.path[2].childNodes]) x.nodeName != "#text" ? list.push(x) : event.path[2].removeChild(x);
-    if (list[list.length - 1] == event.path[1]) {
-        event.path[1].className = "monomial";
+    const coefficient = event.target;
+    if (coefficient.className != "coefficient") return;
+
+    const monomial = coefficient.parentNode;
+    const sign = monomial.querySelector(".sign");
+    const monomials = input.querySelectorAll(".monomial");
+
+    if (monomial == last(monomials)) {
+        monomial.className = "monomial";
         let newMonomial = document.createElement("div");
         newMonomial.className = "monomial last";
-        newMonomial.appendChild(document.createElement("text"));
-        if (list.length == 0) {
-            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
-                <div class=\"variable\"></div> <div class=\"exponent\"></div>";
-        } else if (list.length == 1) {
-            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
-                <div class=\"variable\">x</div> <div class=\"exponent\"></div>";
-        } else {
-            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
-                <div class=\"variable\">x</div> <div class=\"exponent\">" + list.length + "</div>";
-        };
-        event.path[2].appendChild(newMonomial);
-    } else if (list[list.length - 2] == event.path[1] && event.target.innerText == "") {
-        event.path[2].removeChild(event.path[2].lastChild);
-        event.path[1].className = "monomial last";
-        if (event.path[2].childNodes[0] == event.path[1]) {
-            event.path[1].childNodes[0].innerText = "";
-        } else {
-            event.path[1].childNodes[0].innerText = "+";
-        };
+        newMonomial.innerHTML = `<div class="sign">+</div> <div class="coefficient" contenteditable="true"></div>`
+            + `<div class="variable"> ${monomials.length > 0 ? "x" : ""} </div> <div class="exponent"> ${monomials.length > 1 ? monomials.length : ""} </div>`;
+        input.appendChild(newMonomial);
+    } else if (monomial == monomials[monomials.length - 2] && coefficient.innerText == "") {
+        input.removeChild(event.path[2].lastChild);
+        monomial.className = "monomial last";
+        sign.innerText = monomial == input.querySelector(".monomial") ? "" : "+";
     };
 });
 
 document.addEventListener("input", event => {
     const element = event.target;
     const selection = window.getSelection();
+
     if (/^-{0,1}\d*\.?\d*$/.test(element.innerText)) {
         element.innerText = element.innerText;
         const added = element.innerText.length - (element.oldValue ? element.oldValue.length : 0);
+
         let range = document.createRange();
         range.setStart(element.childNodes[0], element.oldSelection ? element.oldSelection + added : added);
         range.collapse(true);
         selection.removeAllRanges();
         selection.addRange(range);
+
         element.oldValue = element.innerText;
         element.oldSelection = selection.focusOffset;
     } else if (element.hasOwnProperty("oldValue")) {
         element.innerText = element.oldValue;
+
         let range = document.createRange();
         range.setStart(element.childNodes[0], element.oldSelection);
         range.collapse(true);
@@ -196,42 +185,58 @@ document.addEventListener("selectionchange", event => {
 document.addEventListener("keydown", event => {
     if (event.key == "Escape") return document.activeElement.blur();
     if (event.key != "ArrowLeft" && event.key != "ArrowRight") return;
+
     const direction = event.key != "ArrowLeft" ? 1 : -1;
     const selection = document.getSelection();
+
     if (selection.focusNode == null) return;
-    const newSelection = selection.focusOffset + direction;
-    if (newSelection < 0) {
-        const node = selection.focusNode.parentNode.parentNode.previousSibling
-        if (node == null) return;
-        let list = [];
-        for (const x of [...node.childNodes]) x.nodeName != "#text" ? list.push(x) : node.removeChild(x);
-        if (list[1] == undefined) return;
-        const newSelection = list[1].childNodes[0];
+
+    const newOffset = selection.focusOffset + direction;
+    const monomial = selection.focusNode.parentNode.parentNode;
+    const monomials = input.querySelectorAll(".monomial");
+    const index = indexOf(monomials, monomial);
+
+    if (newOffset < 0) {
+        const sibling = monomials[index - 1];
+
+        if (sibling == null) return;
+
+        const coefficient = sibling.querySelector(".coefficient");
+
+        if (coefficient == undefined) return;
+
         event.preventDefault();
+        const newSelection = coefficient.childNodes[0];
+
         let range = document.createRange();
         range.setStart(newSelection, newSelection.nodeValue.length);
         range.collapse(true);
         selection.removeAllRanges();
         selection.addRange(range);
-        return;
-    };
-    if (selection.focusNode.nodeValue == null) return;
-    const length = selection.focusNode.nodeValue ? selection.focusNode.nodeValue.length : 0;
-    if (newSelection > length) {
-        if (selection.focusNode.parentNode.parentNode.className == "monomial last") return;
-        const node = selection.focusNode.parentNode.parentNode.nextSibling
-        let list = [];
-        for (const x of [...node.childNodes]) x.nodeName != "#text" ? list.push(x) : node.removeChild(x);
-        if (list[1].childNodes.length == 0) list[1].appendChild(document.createTextNode(""));
-        if (list[1] == undefined || list[1].childNodes.length == 0) return console.log("destroyed");
-        const newSelection = list[1].childNodes[0];
+    } else {
+        if (selection.focusNode.nodeValue == null) return;
+
+        const length = selection.focusNode.nodeValue ? selection.focusNode.nodeValue.length : 0;
+
+        if (newOffset <= length) return;
+        if (monomial.className == "monomial last") return;
+
+        const sibling = monomials[index + 1];
+        const coefficient = sibling.querySelector(".coefficient");
+
+        if (coefficient == undefined) return;
+        if (coefficient.childNodes.length == 0) coefficient.appendChild(document.createTextNode(""));
+
         event.preventDefault();
+        const newSelection = coefficient.childNodes[0];
+
+        if (monomial.querySelector(".coefficient").innerText == "") return;
+
         let range = document.createRange();
         range.setStart(newSelection, 0);
         range.collapse(true);
         selection.removeAllRanges();
         selection.addRange(range);
-        return;
     };
 });
 
