@@ -94,45 +94,71 @@ document.addEventListener("focusout", event => {
     if (event.target.innerText[0] == "-") {
         event.target.innerText = event.target.innerText.slice(1);
         event.path[1].childNodes[0].innerHTML = "&#8722";
+    } else if (event.path[2].childNodes[0] == event.path[1]) {
+        event.path[1].childNodes[0].innerText = "";
     } else {
+        event.path[1].childNodes[0].innerText = "+";
+    };
+    let list = [];
+    for (const x of [...event.path[2].childNodes]) x.nodeName != "#text" ? list.push(x) : event.path[2].removeChild(x);
+    if (list[list.length - 1] == event.path[1] && event.target.innerText != "") {
+        event.path[1].className = "monomial";
+        let newMonomial = document.createElement("div");
+        newMonomial.className = "monomial last";
+        newMonomial.appendChild(document.createElement("text"));
+        if (list.length == 0) {
+            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
+                <div class=\"variable\"></div> <div class=\"exponent\"></div>";
+        } else if (list.length == 1) {
+            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
+                <div class=\"variable\">x</div> <div class=\"exponent\"></div>";
+        } else {
+            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
+                <div class=\"variable\">x</div> <div class=\"exponent\">" + list.length + "</div>";
+        };
+        event.path[2].appendChild(newMonomial);
+    } else if (list[list.length - 2] == event.path[1] && event.target.innerText == "") {
+        event.path[2].removeChild(event.path[2].lastChild);
+        event.path[1].className = "monomial last";
         if (event.path[2].childNodes[0] == event.path[1]) {
             event.path[1].childNodes[0].innerText = "";
         } else {
             event.path[1].childNodes[0].innerText = "+";
         };
+    } else if (event.target.innerText == "") {
+        event.target.innerText = "0";
     };
+});
+
+document.addEventListener("focusin", event => {
+    if (event.target.className != "coefficient") return;
+    for (const x of [...event.path[1].childNodes]) if (x.nodeName == "#text") event.path[1].removeChild(x);
     let list = [];
     for (const x of [...event.path[2].childNodes]) x.nodeName != "#text" ? list.push(x) : event.path[2].removeChild(x);
     if (list[list.length - 1] == event.path[1]) {
-        if (event.target.innerText != "") {
-            event.path[1].className = "monomial";
-            let newMonomial = document.createElement("div");
-            newMonomial.className = "monomial last";
-            newMonomial.appendChild(document.createElement("text"));
-            if (list.length == 0) {
-                newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
+        event.path[1].className = "monomial";
+        let newMonomial = document.createElement("div");
+        newMonomial.className = "monomial last";
+        newMonomial.appendChild(document.createElement("text"));
+        if (list.length == 0) {
+            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
                 <div class=\"variable\"></div> <div class=\"exponent\"></div>";
-            } else if (list.length == 1) {
-                newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
+        } else if (list.length == 1) {
+            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
                 <div class=\"variable\">x</div> <div class=\"exponent\"></div>";
-            } else {
-                newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
+        } else {
+            newMonomial.innerHTML = "<div class=\"sign\">+</div> <div class=\"coefficient\" contenteditable=\"true\"></div>\
                 <div class=\"variable\">x</div> <div class=\"exponent\">" + list.length + "</div>";
-            };
-            event.path[2].appendChild(newMonomial);
         };
-    } else if (list[list.length - 2] == event.path[1]) {
-        if (event.target.innerText == "") {
-            event.path[2].removeChild(event.path[2].lastChild);
-            event.path[1].className = "monomial last";
-            if (event.path[2].childNodes[0] == event.path[1]) {
-                event.path[1].childNodes[0].innerText = "";
-            } else {
-                event.path[1].childNodes[0].innerText = "+";
-            };
+        event.path[2].appendChild(newMonomial);
+    } else if (list[list.length - 2] == event.path[1] && event.target.innerText == "") {
+        event.path[2].removeChild(event.path[2].lastChild);
+        event.path[1].className = "monomial last";
+        if (event.path[2].childNodes[0] == event.path[1]) {
+            event.path[1].childNodes[0].innerText = "";
+        } else {
+            event.path[1].childNodes[0].innerText = "+";
         };
-    } else if (event.target.innerText == "") {
-        event.target.innerText = "0";
     };
 });
 
