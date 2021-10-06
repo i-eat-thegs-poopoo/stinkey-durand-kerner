@@ -76,9 +76,9 @@ function roots(f) {
         return list;
     };
 
-    const iters = 2 ** f.length;
+    const iters = 10 ** f.length;
     let xs = approx(f.length - 1);
-    for (let i = 0; i < iters * 300; i++) xs = apply(xs);
+    for (let i = 0; i < iters * 30; i++) xs = apply(xs);
     return xs;
 
 };
