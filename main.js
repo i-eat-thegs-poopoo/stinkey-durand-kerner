@@ -76,9 +76,25 @@ function roots(f) {
         return list;
     };
 
-    const iters = 10 ** f.length;
-    let xs = approx(f.length - 1);
-    for (let i = 0; i < iters * 30; i++) xs = apply(xs);
+    const inaccuracy = 0.5 ** 50;
+    const closeEnough = (xs, ys) => {
+        for (let i = 0; i < xs.length; i++) {
+            if (Math.abs(xs[i].real - ys[i].real) > inaccuracy || Math.abs(xs[i].imag - ys[i].imag) > inaccuracy) return false;
+        };
+        return true;
+    };
+
+    const num = f.length - 1;
+    let prev = new Array(num).fill(new C(0));
+    let xs = approx(num);
+    for (let i = 0; i < 1000000; i++) {
+        xs = apply(xs);
+        if (closeEnough(prev, xs)) {
+            console.log(i);
+            break;
+        };
+        prev = xs;
+    };
     return xs;
 
 };
